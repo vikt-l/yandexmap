@@ -191,6 +191,8 @@ class Form(QMainWindow):
             org_name = organization["properties"]["CompanyMetaData"]["name"]
             org_address = organization["properties"]["CompanyMetaData"]["address"]
 
+            self.address.setText(org_address)
+
             point = organization["geometry"]["coordinates"]
             org_point = "{0},{1}".format(point[0], point[1])
 
