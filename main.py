@@ -1,4 +1,5 @@
 from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel
+from PyQt5.QtCore import Qt
 import sys
 
 
@@ -9,6 +10,14 @@ class Form(QMainWindow):
 
     def initUI(self):
         pass
+
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_Up:
+            pass
+        if event.key() == Qt.Key_Down:
+            pass
+
+    # code
 
 
 if __name__ == "__main__":
