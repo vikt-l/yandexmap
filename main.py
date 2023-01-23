@@ -217,7 +217,7 @@ class Form(QMainWindow):
             org_point = "{0},{1}".format(point[0], point[1])
 
             map_params = {
-                "ll": address_ll,
+                "ll": org_point,
                 "spn": ",".join([self.delta, self.delta]),
                 "l": "map",
                 "pt": "{0},pm2dgl".format(org_point)
