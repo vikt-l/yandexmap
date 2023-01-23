@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QApplication, QMainWindow, QLineEdit, QLabel, QPushButton
-from PyQt5.QtGui import QPixmap
-from PyQt5 import QtCore
+from PyQt5.QtGui import *
+from PyQt5.QtCore import *
 from io import BytesIO
 from PIL import Image
 
@@ -68,8 +68,20 @@ class Form(QMainWindow):
         self.lbl = QLabel(self)
         self.lbl.setText('Введите корректные данные')
         self.lbl.resize(270, 20)
-        self.lbl.move(420, 70)
+        self.lbl.move(420, 120)
         self.lbl.hide()
+
+        self.btn_reset = QPushButton(self)
+        self.btn_reset.setText('X')
+        self.btn_reset.resize(30, 30)
+        self.btn_reset.move(410, 70)
+        self.btn_reset.clicked.connect(self.reset)
+
+    def reset(self):
+        self.address.setText('Введите адрес')
+        self.object.setText('Введите запрос')
+        self.get_info()
+
 
     def get_info(self):
 
@@ -104,7 +116,7 @@ class Form(QMainWindow):
         im = Image.open(BytesIO(response.content))
         im.save('img.png')
         self.pixmap = QPixmap('img.png')
-        self.pixmap = self.pixmap.scaled(730, 600, QtCore.Qt.KeepAspectRatio)
+        self.pixmap = self.pixmap.scaled(730, 600, Qt.KeepAspectRatio)
         self.image.setPixmap(self.pixmap)
 
     def get_address(self):
@@ -139,13 +151,17 @@ class Form(QMainWindow):
             "l": "map"
         }
 
+        self.coord_x.setText(toponym_longitude)
+        self.coord_y.setText(toponym_lattitude)
+        self.mashtab.setText(self.delta)
+
         map_api_server = "http://static-maps.yandex.ru/1.x/"
         response = requests.get(map_api_server, params=map_params)
 
         im = Image.open(BytesIO(response.content))
         im.save('img.png')
         self.pixmap = QPixmap('img.png')
-        self.pixmap = self.pixmap.scaled(730, 600, QtCore.Qt.KeepAspectRatio)
+        self.pixmap = self.pixmap.scaled(730, 600, Qt.KeepAspectRatio)
         self.image.setPixmap(self.pixmap)
 
     def get_obj(self):
@@ -164,6 +180,10 @@ class Form(QMainWindow):
         try:
             self.toponym_longitude = str(float(self.toponym_longitude))
             self.toponym_lattitude = str(float(self.toponym_lattitude))
+
+            self.coord_x.setText(self.toponym_longitude)
+            self.coord_y.setText(self.toponym_lattitude)
+            self.mashtab.setText(self.delta)
 
         except Exception:
             self.lbl.show()
@@ -209,7 +229,7 @@ class Form(QMainWindow):
             im = Image.open(BytesIO(response.content))
             im.save('img.png')
             self.pixmap = QPixmap('img.png')
-            self.pixmap = self.pixmap.scaled(730, 600, QtCore.Qt.KeepAspectRatio)
+            self.pixmap = self.pixmap.scaled(730, 600, Qt.KeepAspectRatio)
             self.image.setPixmap(self.pixmap)
 
 
