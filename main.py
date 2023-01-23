@@ -3,6 +3,7 @@ from PyQt5.QtGui import QPixmap
 from PyQt5 import QtCore
 from io import BytesIO, StringIO
 from PIL import Image
+import PyQt5 as Qt
 
 import sys
 import requests
@@ -42,6 +43,34 @@ class Form(QMainWindow):
         self.btn.resize(100, 30)
         self.btn.setText('ok')
         self.btn.clicked.connect(self.get_info)
+
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_Up:
+            if self.toponym_lattitude + float(self.toponym_lattitude + 2 * float(self.delta)) <= 90:
+                self.toponym_lattitude + float(self.toponym_lattitude + 2 * float(self.delta))
+            else:
+                self.toponym_lattitude = 90
+
+        if event.key() == Qt.Key_Down:
+            if self.toponym_lattitude - float(self.toponym_lattitude + 2 * float(self.delta)) >= -90:
+                self.toponym_lattitude - float(self.toponym_lattitude + 2 * float(self.delta))
+            else:
+                self.toponym_lattitude = -90
+
+        if event.key() == Qt.Key_Right:
+            if self.toponym_longitude + float(self.toponym_lattitude + 3 * float(self.delta)) <= 180:
+                self.toponym_longitude += float(self.toponym_lattitude + 3 * float(self.delta))
+            else:
+                cord = 180 - self.toponym_longitude
+                self.toponym_longitude = -180 + cord
+
+        if event.key() == Qt.Key_Left:
+            if self.toponym_longitude - float(self.toponym_lattitude + 3 * float(self.delta)) >= -180:
+                self.toponym_longitude -= float(self.toponym_lattitude + 3 * float(self.delta))
+            else:
+                cord = -180 - self.toponym_longitude
+                self.toponym_longitude = 180 - abs(cord)
+
 
     def get_info(self):
         self.toponym_longitude = self.coord_x.text()
