@@ -78,9 +78,13 @@ class Form(QMainWindow):
         self.btn_reset.clicked.connect(self.reset)
 
         self.cbox1 = QCheckBox(self)
-        self.cbox1.move(0, 0)
+        self.cbox1.move(460, 70)
         self.cbox1.setChecked(False)
         self.cbox1.toggled.connect(self.check_index)
+
+        self.lbl_index = QLabel(self)
+        self.lbl_index.move(490, 70)
+        self.lbl_index.setText('Индекс')
 
     def check_index(self):
         try:
