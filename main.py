@@ -252,16 +252,14 @@ class Form(QMainWindow):
             json_response = response.json()
 
             organization = json_response["features"][0]
-            print(organization)
             org_address = organization["properties"]["CompanyMetaData"]["address"]
-            print(org_address)
-
+            number = org_address[org_address.rfind(','):]
             point = organization["geometry"]["coordinates"]
             org_point = "{0},{1}".format(point[0], point[1])
 
             self.coord_x.setText(str(point[0]))
             self.coord_y.setText(str(point[1]))
-            self.address.setText(org_address)  # не указывается номер дома
+            self.address.setText(org_address + number)
 
             map_params = {
                 "ll": org_point,
