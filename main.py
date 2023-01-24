@@ -1,9 +1,9 @@
 from PyQt5.QtWidgets import QApplication, QMainWindow, QLineEdit, QLabel, QPushButton
 from PyQt5.QtGui import QPixmap
 from PyQt5 import QtCore
+from PyQt5.QtCore import Qt
 from io import BytesIO, StringIO
 from PIL import Image
-import PyQt5 as Qt
 
 import sys
 import requests
@@ -22,8 +22,8 @@ class Form(QMainWindow):
         self.coord_y = QLineEdit(self)
         self.mashtab = QLineEdit(self)
 
-        self.coord_x.setText('Введите широту')
-        self.coord_y.setText('Введите долготу')
+        self.coord_x.setText('Введите долготу')
+        self.coord_y.setText('Введите широту')
         self.mashtab.setText('Введите масштаб')
 
         self.coord_x.move(10, 20)
@@ -44,34 +44,6 @@ class Form(QMainWindow):
         self.btn.setText('ok')
         self.btn.clicked.connect(self.get_info)
 
-    def keyPressEvent(self, event):
-        if event.key() == Qt.Key_Up:
-            if self.toponym_lattitude + float(self.toponym_lattitude + 2 * float(self.delta)) <= 90:
-                self.toponym_lattitude + float(self.toponym_lattitude + 2 * float(self.delta))
-            else:
-                self.toponym_lattitude = 90
-
-        if event.key() == Qt.Key_Down:
-            if self.toponym_lattitude - float(self.toponym_lattitude + 2 * float(self.delta)) >= -90:
-                self.toponym_lattitude - float(self.toponym_lattitude + 2 * float(self.delta))
-            else:
-                self.toponym_lattitude = -90
-
-        if event.key() == Qt.Key_Right:
-            if self.toponym_longitude + float(self.toponym_lattitude + 3 * float(self.delta)) <= 180:
-                self.toponym_longitude += float(self.toponym_lattitude + 3 * float(self.delta))
-            else:
-                cord = 180 - self.toponym_longitude
-                self.toponym_longitude = -180 + cord
-
-        if event.key() == Qt.Key_Left:
-            if self.toponym_longitude - float(self.toponym_lattitude + 3 * float(self.delta)) >= -180:
-                self.toponym_longitude -= float(self.toponym_lattitude + 3 * float(self.delta))
-            else:
-                cord = -180 - self.toponym_longitude
-                self.toponym_longitude = 180 - abs(cord)
-
-
     def get_info(self):
         self.toponym_longitude = self.coord_x.text()
         self.toponym_lattitude = self.coord_y.text()
@@ -91,6 +63,43 @@ class Form(QMainWindow):
         self.pixmap = QPixmap('img.png')
         self.pixmap = self.pixmap.scaled(730, 600, QtCore.Qt.KeepAspectRatio)
         self.image.setPixmap(self.pixmap)
+
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_PageUp:
+            try:
+                self.delta = str(round(float(self.delta) + 0.1, 4))
+                self.mashtab.setText(self.delta)
+                self.get_info()
+            except Exception:
+                pass
+
+        elif event.key() == Qt.Key_PageDown:
+            try:
+                self.delta = str(round(float(self.delta) - 0.1, 4))
+                self.mashtab.setText(self.delta)
+                self.get_info()
+            except Exception:
+                pass
+
+        elif event.key() == Qt.Key_Up:
+            self.toponym_lattitude = str(float(self.toponym_longitude) + 2 * float(self.delta))
+            self.coord_y.setText(self.toponym_lattitude)
+            self.get_info()
+
+        elif event.key() == Qt.Key_Down:
+            self.toponym_lattitude = str(float(self.toponym_longitude) - 2 * float(self.delta))
+            self.coord_y.setText(self.toponym_lattitude)
+            self.get_info()
+
+        elif event.key() == Qt.Key_Right:
+            self.toponym_longitude = str(float(self.toponym_lattitude) + 3 * float(self.delta))
+            self.coord_x.setText(self.toponym_longitude)
+            self.get_info()
+
+        elif event.key() == Qt.Key_Left:
+            self.toponym_longitude = str(float(self.toponym_lattitude) - 3 * float(self.delta))
+            self.coord_x.setText(self.toponym_longitude)
+            self.get_info()
 
 
 if __name__ == "__main__":
