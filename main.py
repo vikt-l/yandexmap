@@ -1,4 +1,4 @@
-rom PyQt5.QtWidgets import QApplication, QMainWindow, QLineEdit, QLabel, QPushButton, QCheckBox
+from PyQt5.QtWidgets import QApplication, QMainWindow, QLineEdit, QLabel, QPushButton, QCheckBox
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from io import BytesIO
@@ -122,6 +122,7 @@ class Form(QMainWindow):
     def reset(self):
         self.address.setText('Введите адрес')
         self.object.setText('Введите запрос')
+        self.cbox1.setChecked(False)
         self.get_info()
 
     def get_info(self):
@@ -197,8 +198,6 @@ class Form(QMainWindow):
             self.coord_x.setText(self.toponym_longitude)
             self.get_info()
 
-        self.cbox1.setChecked(False)
-
     def get_address(self):
         self.lbl.hide()
 
@@ -224,6 +223,8 @@ class Form(QMainWindow):
         toponym_coodrinates = toponym["Point"]["pos"]
         toponym_longitude, toponym_lattitude = toponym_coodrinates.split(" ")
         self.toponym_index = toponym["metaDataProperty"]["GeocoderMetaData"]['Address']['postal_code']
+        ad = toponym["metaDataProperty"]["GeocoderMetaData"]['Address']['formatted']
+        number = ad[ad.rfind(","):]
 
         map_params = {
             "ll": ",".join([toponym_longitude, toponym_lattitude]),
@@ -234,6 +235,7 @@ class Form(QMainWindow):
         self.coord_x.setText(toponym_longitude)
         self.coord_y.setText(toponym_lattitude)
         self.mashtab.setText(self.delta)
+        self.address.setText(ad + number)
 
         map_api_server = "http://static-maps.yandex.ru/1.x/"
         response = requests.get(map_api_server, params=map_params)
