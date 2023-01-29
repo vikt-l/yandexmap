@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QApplication, QMainWindow, QLineEdit, QLabel, QPushButton, QCheckBox
+from PyQt5.QtWidgets import QApplication, QMainWindow, QLineEdit, QLabel, QPushButton, QCheckBox, QComboBox
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from io import BytesIO
@@ -86,6 +86,19 @@ class Form(QMainWindow):
         self.lbl_index.move(490, 70)
         self.lbl_index.setText('Индекс')
 
+        self.lbl_layer = QLabel(self)
+        self.lbl_layer.move(580, 70)
+        self.lbl_layer.setText('Слой:')
+
+        self.layer = QComboBox(self)
+        self.layer.move(630, 70)
+        self.layer.addItem('схема')
+        self.layer.addItem('спутник')
+        self.layer.addItem('гибрид')
+        if self.layer.objectNameChanged:
+            self.get_info()
+            print(2)
+
     def check_index(self):
         try:
             if self.cbox1.isChecked():
@@ -145,10 +158,16 @@ class Form(QMainWindow):
             self.lbl.show()
             return None
 
+        map_layers = {
+            "схема": "map",
+            "спутник": "sat",
+            "гибрид": "skl",
+        }
+
         map_params = {
             "ll": ",".join([self.toponym_longitude, self.toponym_lattitude]),
             "spn": ",".join([self.delta, self.delta]),
-            "l": "map"
+            "l": map_layers.get(self.layer.currentText(), "map")
         }
 
         map_api_server = "http://static-maps.yandex.ru/1.x/"
